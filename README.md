@@ -1,5 +1,5 @@
 # Display-channel-number-on-midi-notes
 This script serves best as a demonstration. 
-Midi channels have no lane. Not represented in any good way.
-Using colors is a poor way of representing numbers. 
-Numbers should be represented by numbers.
+This script is really mostly Julian Saders stuff. I snuck in some graphics here and there.
+I try to keep chunk reading to a minimum. But there might be better ways to program this.
+I might develop this further.
