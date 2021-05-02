@@ -25,7 +25,7 @@ function round(exact, quantum) --stackoverflow
 end
 
 teller = 0 
-function go() 
+function go() --The takes processed last in this function will appear on top 
     teller = teller +1 
     notes = {} 
     methods = {} 
@@ -44,7 +44,7 @@ function go()
    if old_take   then 
       getTakeNotes(old_take) 
    end
-   getTakeNotes( take ) 
+   getTakeNotes( take )
 end 
   
 function ConvertCCTypeChunkToAPI(lane) --sader magic
