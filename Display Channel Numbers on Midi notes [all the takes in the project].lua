@@ -1,9 +1,9 @@
 -- changelog
---   30/4-21   - one bitmap. Less flickery
+--   30/4-21   - one bitmap instead of many. Less flickery
+--   2/5 -21   - delay displaying after zooming/scrolling
 
 -- Future/Wanted features :  
 --  + Exclude muted takes
---  + Delay chunkreading while zooming. 
 
 -- USER DATA
 delaytime = 0.5
