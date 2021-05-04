@@ -1,34 +1,36 @@
--- changelog
---   30/4-21   - one bitmap instead of many. Less flickery
---   2/5 -21   - delay displaying after zooming/scrolling
+ -- changelog
+--   30/4-21   - one bitmap. Less flickery 
+--   4/5 -21  - new thinner ,reaper-like font.
 
 -- Future/Wanted features :  
 --  + Exclude muted takes
+--  + Delay chunkreading while zooming. 
 
 -- USER DATA
 delaytime = 0.5
 humanization_parameter = 0.1    
 Fontsize = 15 
-color = 0xFFFFFFF -- 0xRRGGBB 
-colorH = 0x000000
 ------------------------------
 
 LICEFont = reaper.JS_LICE_CreateFont() 
-reaper.JS_LICE_SetFontColor( LICEFont,   color)  
+reaper.JS_LICE_SetFontColor( LICEFont,   0xFFFFFF)  
 sectionID = 32060 -- midi editor 
 local sb = reaper.SetToggleCommandState(sectionID ,({reaper.get_action_context()})[4],1)  
 
+function setFont() 
+  fontName="Times New Roman" 
+  GDIFont= reaper.JS_GDI_CreateFont( 16,  155, 1, false,  false,false,  fontName) 
+  LICEFont = reaper.JS_LICE_CreateFont() 
+  reaper.JS_LICE_SetFontFromGDI(LICEFont,GDIFont,ble) 
+end 
 
 function round(exact, quantum) --stackoverflow
   local quant,frac = math.modf(exact/quantum)
   return quantum * (quant + (frac > 0.5 and 1 or 0))
 end
 
-teller = 0 
-function go() --The takes processed last in this function will appear on top 
-    teller = teller +1 
+function go() 
     notes = {} 
-    methods = {} 
     for j = 0, reaper.CountMediaItems(0)-1 do 
        Item = reaper.GetMediaItem(0,j) 
        cnt = reaper.GetMediaItemNumTakes(Item)
@@ -44,7 +46,7 @@ function go() --The takes processed last in this function will appear on top
    if old_take   then 
       getTakeNotes(old_take) 
    end
-   getTakeNotes( take )
+   getTakeNotes( take ) 
 end 
   
 function ConvertCCTypeChunkToAPI(lane) --sader magic
@@ -65,13 +67,9 @@ function ConvertCCTypeChunkToAPI(lane) --sader magic
       return (tLanes[lane] or lane) -- If 7bit CC, number remains the same
     end
 end 
-    
--- This function runs suprisinly fast. I doesnt blow up the system ,even on large midi takes.
+
 function readfromchunk()   
     -- This is mostly taken from Julian Saders midiscripts 
-    -- Gathers information like : 
-    -- ME_LeftmostTick,  ME_HorzZoom , topvisiblepitch  , ME_PixelsPerPitch ,ME_midiviewHeight 
-    -- activeChannel, ME_Docked, ME_TimeBase 
     tME_Lanes = {}  
     midiview  = reaper.JS_Window_FindChildByID(hwnd, 1001) 
     ret,msg = pcall( function() 
@@ -229,7 +227,7 @@ function DRAW()
        local pixelpos_x = r.x 
        local pixelpos_y = r.y + 62
        reaper.JS_LICE_SetFontColor( LICEFont, color) 
-       reaper.JS_LICE_DrawText(bitmap, LICEFont, chan + 1, 10,pixelpos_x+2 , pixelpos_y,  pixelpos_x+2+15, pixelpos_y+15 )
+       reaper.JS_LICE_DrawText(bitmap, LICEFont, chan + 1, Fontsize,pixelpos_x+2 , pixelpos_y,  pixelpos_x+2+Fontsize, pixelpos_y+Fontsize )
     end
   end
   did_it_work = reaper.JS_Composite(midiview  ,0, 0,-1 , -1 ,  bitmap, 0 , 0, rectRight -  rectLeft, rectBottom - rectTop ,  false)  
@@ -299,6 +297,7 @@ function main()
 end 
 
 update = true
+setFont()
 main()
 
 reaper.atexit( function() 
