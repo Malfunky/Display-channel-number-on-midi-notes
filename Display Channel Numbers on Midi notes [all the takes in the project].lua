@@ -4,7 +4,6 @@
 
 -- Future/Wanted features :  
 --  + Exclude muted takes
---  + Delay chunkreading while zooming. 
 
 -- USER DATA
 delaytime = 0.5
